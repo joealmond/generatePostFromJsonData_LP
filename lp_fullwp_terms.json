@@ -1,0 +1,50 @@
+[
+	{
+		"term_id" : 1,
+		"name" : "Egyéb",
+		"slug" : "egyeb",
+		"term_group" : 0
+	},
+	{
+		"term_id" : 2,
+		"name" : "Top Menu",
+		"slug" : "top-menu",
+		"term_group" : 0
+	},
+	{
+		"term_id" : 3,
+		"name" : "Közösségi hivatkozások menü",
+		"slug" : "kozossegi-hivatkozasok-menu",
+		"term_group" : 0
+	},
+	{
+		"term_id" : 4,
+		"name" : "post-format-aside",
+		"slug" : "post-format-aside",
+		"term_group" : 0
+	},
+	{
+		"term_id" : 9,
+		"name" : "Hírek",
+		"slug" : "hirek",
+		"term_group" : 0
+	},
+	{
+		"term_id" : 10,
+		"name" : "Fesztiválok_Koncertek",
+		"slug" : "fesztivalok_koncertek",
+		"term_group" : 0
+	},
+	{
+		"term_id" : 11,
+		"name" : "Konferencia_Vállalati_Rendezvény",
+		"slug" : "konferencia_vallalati_rendezveny",
+		"term_group" : 0
+	},
+	{
+		"term_id" : 12,
+		"name" : "Blog",
+		"slug" : "blog",
+		"term_group" : 0
+	}
+]
