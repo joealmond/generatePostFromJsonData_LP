@@ -1,30 +1,10 @@
 /*jshint esversion: 9 */
 const fs = require("fs");
+const { title } = require("process");
 
-const dataCloudinary = require("./cloudinaryUploadedData.json"); // only read once
-const dataRelations = require("./lp_fullwp_term_relationships.json"); // only read once
+const data = require("./newData.json"); // only read once
 
-// data from lp_full.wp_terms.json
-const egyeb = 1;
-const topMenu = 2;
-const socialLinks = 3;
-const postFormatAside = 4;
-const news = 9;
-const festivals = 10;
-const corporate = 11;
-const blog = 12;
-
-// result data
-let newData = [];
-
-// structure of lp_fullwp_term_relationships.json
-// {
-//   "object_id" : 2016,
-//   "term_taxonomy_id" : 10,
-//   "term_order" : 0
-// }
-
-// structure of cloudinaryUploadedData.json
+// newData.json data example
 // [
 //   {
 //     "title": "A Within Temptation turnéjának budapesti állomásán segítettük a szervezőket és a zenekart",
@@ -40,59 +20,89 @@ let newData = [];
 //       ]
 //     },
 //     "url": "https://res.cloudinary.com/lightpositive/image/upload/v1647560668/uploads/A%20Within%20Temptation%20turn%C3%A9j%C3%A1nak%20budapesti%20%C3%A1llom%C3%A1s%C3%A1n%20seg%C3%ADtett%C3%BCk%20a%20szervez%C5%91ket%20%C3%A9s%20a%20zenekart/Within_Temptation-2-1.jpg",
-//     "id": "uploads/A Within Temptation turnéjának budapesti állomásán segítettük a szervezőket és a zenekart/Within_Temptation-2-1"
+//     "id": "uploads/A Within Temptation turnéjának budapesti állomásán segítettük a szervezőket és a zenekart/Within_Temptation-2-1",
+//     "category": "news"
 //   },
 // ]
 
-for (const keyOut in dataCloudinary) {
-  if (Object.hasOwnProperty.call(dataCloudinary, keyOut)) {
-    const elemOut = dataCloudinary[keyOut];
-    for (const keyIn in dataRelations) {
-      if (Object.hasOwnProperty.call(dataRelations, keyIn)) {
-        const elemIn = dataRelations[keyIn];
-        if (elemOut.origin.ID === elemIn.object_id) {
-          switch (elemIn.term_taxonomy_id) {
-            case egyeb:
-              elemOut.category = "egyeb";
-              break;
-            case topMenu:
-              elemOut.category = "topMenu";
-              break;
-            case socialLinks:
-              elemOut.category = "socialLinks";
-              break;
-            case postFormatAside:
-              elemOut.category = "postFormatAside";
-              break;
-            case news:
-              elemOut.category = "news";
-              break;
-            case festivals:
-              elemOut.category = "festivals";
-              break;
-            case corporate:
-              elemOut.category = "corporate";
-              break;
-            case blog:
-              elemOut.category = "blog";
-              break;
-            default:
-              elemOut.category = "none";
-          }
-        }
-      }
+let newData;
+let category;
+const festivalText = "galleryLayout_festival.html";
+const corporateText = "galleryLayout_corporate.html";
+const idTemp = { id: "" };
+let urls;
+let text;
+for (const key in data) {
+  if (Object.hasOwnProperty.call(data, key)) {
+    newData = data[key];
+    if (newData.category == "corporate") {
+      category = corporateText;
+    } else {
+      category = festivalText;
     }
-    newData = [...newData, elemOut];
+    // idTemp.id = 203;
+    console.log(newData.origin.ID, idTemp.id);
+    if (newData.origin.ID != idTemp.id) {
+      idTemp.id = newData.origin.ID;
+
+      urls = [`\n   - `, newData.url];
+    } else {
+      urls = [...urls, `\n   - `, newData.url].join("");
+    }
+    // prettier ignore
+    text = `---
+title: ${newData.title}
+coverImage:
+  - ${newData.url}
+galleryImages:${urls}
+layout: ${category}
+---
+`;
+
+    if (newData.category == "corporate") {
+      // save file
+      fs.mkdir(
+        `references/corporate/${newData.origin.post_name.slice(0, 50)}`,
+        { recursive: true },
+        (err) => {
+          if (err) throw err;
+        }
+      );
+      fs.writeFile(
+        `references/corporate/${newData.origin.post_name}/index.md`,
+        text,
+        "utf8",
+        function (err) {
+          if (err) {
+            console.log("An error occured while writing Object to File.");
+            return console.log(err);
+          }
+          console.log("File has been saved.");
+        }
+      );
+      // save file
+    } else {
+      // save file
+      fs.mkdir(
+        `references/festivals/${newData.origin.post_name.slice(0, 50)}`,
+        { recursive: true },
+        (err) => {
+          if (err) throw err;
+        }
+      );
+      fs.writeFile(
+        `references/festivals/${newData.origin.post_name}/index.md`,
+        text,
+        "utf8",
+        function (err) {
+          if (err) {
+            console.log("An error occured while writing Object to File.");
+            return console.log(err);
+          }
+          console.log("File has been saved.");
+        }
+      );
+      // save file
+    }
   }
 }
-
-// save JSON Object
-let jsonContent = JSON.stringify(newData);
-fs.writeFile("newData.json", jsonContent, "utf8", function (err) {
-  if (err) {
-    console.log("An error occured while writing JSON Object to File.");
-    return console.log(err);
-  }
-  console.log("JSON file has been saved.");
-});
-// save JSON Object end
