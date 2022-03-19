@@ -44,17 +44,17 @@ for (const key in data) {
     console.log(newData.origin.ID, idTemp.id);
     if (newData.origin.ID != idTemp.id) {
       idTemp.id = newData.origin.ID;
-
-      urls = [`\n   - `, newData.url];
+      urls = [newData.url];
     } else {
-      urls = [...urls, `\n   - `, newData.url].join("");
+      urls = [...urls, `\n  - `, newData.url].join("");
     }
     // prettier ignore
     text = `---
 title: ${newData.title}
 coverImage:
   - ${newData.url}
-galleryImages:${urls}
+galleryImages: 
+  - ${urls}
 layout: ${category}
 ---
 `;
@@ -69,7 +69,10 @@ layout: ${category}
         }
       );
       fs.writeFile(
-        `references/corporate/${newData.origin.post_name}/index.md`,
+        `references/corporate/${newData.origin.post_name.slice(
+          0,
+          50
+        )}/index.md`,
         text,
         "utf8",
         function (err) {
@@ -91,7 +94,10 @@ layout: ${category}
         }
       );
       fs.writeFile(
-        `references/festivals/${newData.origin.post_name}/index.md`,
+        `references/festivals/${newData.origin.post_name.slice(
+          0,
+          50
+        )}/index.md`,
         text,
         "utf8",
         function (err) {
