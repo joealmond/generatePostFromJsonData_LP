@@ -53,6 +53,7 @@ for (const key in data) {
 title: ${newData.title}
 coverImage:
   - ${newData.url}
+date: ${newData.origin.post_date}
 galleryImages: 
   - ${urls}
 layout: ${category}
